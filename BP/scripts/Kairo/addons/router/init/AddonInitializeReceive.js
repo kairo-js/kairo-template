@@ -35,20 +35,20 @@ export class AddonInitializeReceive {
     handleInitializeRequest() {
         const addonCounter = ScoreboardManager.ensureObjective(SCOREBOARD_NAMES.ADDON_COUNTER);
         addonCounter.addScore(SCOREBOARD_NAMES.ADDON_COUNTER, 1);
-        this.addonInitializer.setRegistrationNum(addonCounter.getScore(SCOREBOARD_NAMES.ADDON_COUNTER) ?? 0);
+        this.addonInitializer.setRegistrationNum(
+            addonCounter.getScore(SCOREBOARD_NAMES.ADDON_COUNTER) ?? 0,
+        );
         this.addonInitializer.sendResponse();
     }
     handleRequestReseedId(message) {
         const registrationNum = this.addonInitializer.getRegistrationNum();
-        if (message !== registrationNum.toString())
-            return;
+        if (message !== registrationNum.toString()) return;
         this.addonInitializer.refreshSessionId();
         this.addonInitializer.sendResponse();
     }
     subscribeReceiverHooks(message) {
         const registrationNum = this.addonInitializer.getRegistrationNum();
-        if (message !== registrationNum.toString())
-            return;
+        if (message !== registrationNum.toString()) return;
         this.addonInitializer.subscribeReceiverHooks();
     }
 }

@@ -26,14 +26,14 @@ When this command is executed, the following operations will be performed:
 ## Setup && Build
 
 1. Install dependencies:
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 2. Deploy
-   ```bash
-   npm run build
-   ```
+    ```bash
+    npm run build
+    ```
 3. Auto-deploy on file change:
-   ```bash
-   npm run dev
-   ```
+    ```bash
+    npm run dev
+    ```

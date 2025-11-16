@@ -12,27 +12,25 @@ import { SCRIPT_EVENT_IDS } from "../../../constants/scriptevent";
  * Extracts the necessary parts of the properties and sends them using JSON.stringify
  */
 export class AddonInitializeResponse {
-  private constructor(private readonly addonInitializer: AddonInitializer) {}
+    private constructor(private readonly addonInitializer: AddonInitializer) {}
 
-  public static create(
-    addonInitializer: AddonInitializer,
-  ): AddonInitializeResponse {
-    return new AddonInitializeResponse(addonInitializer);
-  }
+    public static create(addonInitializer: AddonInitializer): AddonInitializeResponse {
+        return new AddonInitializeResponse(addonInitializer);
+    }
 
-  /**
-   * scoreboard を使って登録用の識別番号も送信しておく
-   * Also send the registration ID using the scoreboard
-   */
-  public sendResponse(addonProperty: AddonProperty): void {
-    system.sendScriptEvent(
-      SCRIPT_EVENT_IDS.BEHAVIOR_REGISTRATION_RESPONSE,
-      JSON.stringify([
-        addonProperty,
-        world.scoreboard
-          .getObjective(SCOREBOARD_NAMES.ADDON_COUNTER)
-          ?.getScore(SCOREBOARD_NAMES.ADDON_COUNTER) ?? 0,
-      ]),
-    );
-  }
+    /**
+     * scoreboard を使って登録用の識別番号も送信しておく
+     * Also send the registration ID using the scoreboard
+     */
+    public sendResponse(addonProperty: AddonProperty): void {
+        system.sendScriptEvent(
+            SCRIPT_EVENT_IDS.BEHAVIOR_REGISTRATION_RESPONSE,
+            JSON.stringify([
+                addonProperty,
+                world.scoreboard
+                    .getObjective(SCOREBOARD_NAMES.ADDON_COUNTER)
+                    ?.getScore(SCOREBOARD_NAMES.ADDON_COUNTER) ?? 0,
+            ]),
+        );
+    }
 }
