@@ -1,15 +1,12 @@
-import type { Player } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
 import { ErrorDetails } from "../constants/error";
 import { KAIRO_TRANSLATE_IDS } from "../constants/translate";
-
 export class ErrorManager {
-    public static async showErrorDetails(player: Player, errorId: string): Promise<void> {
+    static async showErrorDetails(player, errorId) {
         const errorDetail = ErrorDetails[errorId];
         if (!errorDetail) {
             return this.showErrorDetails(player, "kairo_error_not_found");
         }
-
         const errorForm = new ActionFormData()
             .title({ translate: KAIRO_TRANSLATE_IDS.ERROR_FORM_TITLE })
             .header({ translate: KAIRO_TRANSLATE_IDS.ERROR_FORM_HEADER })

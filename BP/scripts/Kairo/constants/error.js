@@ -1,10 +1,4 @@
-interface ErrorDetail {
-    errorMessageId: string;
-    errorHintId: string;
-    errorCode: string;
-}
-
-export const ErrorDetails: Record<string, ErrorDetail> = {
+export const ErrorDetails = {
     kairo_error_not_found: {
         errorMessageId: "kairo.error.not.found.message",
         errorHintId: "kairo.error.not.found.hint",

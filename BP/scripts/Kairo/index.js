@@ -1,134 +1,94 @@
 import { system } from "@minecraft/server";
-import { AddonPropertyManager, type AddonProperty } from "./addons/AddonPropertyManager";
+import { AddonPropertyManager } from "./addons/AddonPropertyManager";
 import { AddonInitializer } from "./addons/router/init/AddonInitializer";
 import { AddonManager } from "./addons/AddonManager";
 import { SCRIPT_EVENT_IDS } from "./constants/scriptevent";
-import type { KairoCommand } from "./utils/KairoUtils";
-
-type ActivateHandler = () => void | Promise<void>;
-type DeactivateHandler = () => void | Promise<void>;
-type ScriptEventHandler = (data: KairoCommand) => void | Promise<void>;
-
-type HandlerOptions = {
-    priority?: number;
-};
-
-type Assignable<T> = T | { run: T; options?: HandlerOptions };
-type Stored<T> = { fn: T; priority: number };
-
 export class Kairo {
-    private static instance: Kairo;
-    private initialized = false;
-
-    private readonly addonManager: AddonManager;
-    private readonly addonPropertyManager: AddonPropertyManager;
-    private readonly addonInitializer: AddonInitializer;
-
-    private static _initHooks: Stored<ActivateHandler>[] = [];
-    private static _deinitHooks: Stored<DeactivateHandler>[] = [];
-    private static _seHooks: Stored<ScriptEventHandler>[] = [];
-
-    private constructor() {
+    constructor() {
+        this.initialized = false;
         this.addonManager = AddonManager.create(this);
         this.addonPropertyManager = AddonPropertyManager.create(this);
         this.addonInitializer = AddonInitializer.create(this);
     }
-
-    private static getInstance(): Kairo {
+    static getInstance() {
         if (!this.instance) {
             this.instance = new Kairo();
         }
         return this.instance;
     }
-
-    public static init(): void {
+    static init() {
         const inst = this.getInstance();
         if (inst.initialized) return;
-
         inst.initialized = true;
         inst.addonInitializer.subscribeClientHooks();
     }
-
-    public getSelfAddonProperty(): AddonProperty {
+    getSelfAddonProperty() {
         return this.addonPropertyManager.getSelfAddonProperty();
     }
-
-    public refreshSessionId(): void {
+    refreshSessionId() {
         this.addonPropertyManager.refreshSessionId();
     }
-
-    public subscribeReceiverHooks(): void {
+    subscribeReceiverHooks() {
         this.addonManager.subscribeReceiverHooks();
     }
-
-    public static unsubscribeInitializeHooks(): void {
+    static unsubscribeInitializeHooks() {
         this.getInstance().addonInitializer.unsubscribeClientHooks();
         system.sendScriptEvent(SCRIPT_EVENT_IDS.UNSUBSCRIBE_INITIALIZE, "");
     }
-
-    public static dataVaultHandleOnScriptEvent(data: KairoCommand): void {
-        this.getInstance().addonManager.dataVaultHandleOnScriptEvent(data);
+    static dataVaultHandleOnScriptEvent(message) {
+        this.getInstance().addonManager.dataVaultHandleOnScriptEvent(message);
     }
-
-    public getDataVaultLastDataLoaded(): { data: string; count: number } {
+    getDataVaultLastDataLoaded() {
         return this.addonManager.getDataVaultLastDataLoaded();
     }
-
-    public static set onActivate(val: Assignable<ActivateHandler>) {
+    static set onActivate(val) {
         if (typeof val === "function") this._pushSorted(this._initHooks, val);
         else this._pushSorted(this._initHooks, val.run, val.options);
     }
-    public static set onDeactivate(val: Assignable<DeactivateHandler>) {
+    static set onDeactivate(val) {
         if (typeof val === "function") this._pushSorted(this._deinitHooks, val);
         else this._pushSorted(this._deinitHooks, val.run, val.options);
     }
-    public static set onScriptEvent(val: Assignable<ScriptEventHandler>) {
+    static set onScriptEvent(val) {
         if (typeof val === "function") this._pushSorted(this._seHooks, val);
         else this._pushSorted(this._seHooks, val.run, val.options);
     }
-
-    public static addActivate(fn: ActivateHandler, opt?: HandlerOptions) {
+    static addActivate(fn, opt) {
         this._pushSorted(this._initHooks, fn, opt);
     }
-    public static addDeactivate(fn: DeactivateHandler, opt?: HandlerOptions) {
+    static addDeactivate(fn, opt) {
         this._pushSorted(this._deinitHooks, fn, opt);
     }
-    public static addScriptEvent(fn: ScriptEventHandler, opt?: HandlerOptions) {
+    static addScriptEvent(fn, opt) {
         this._pushSorted(this._seHooks, fn, opt);
     }
-
-    public _scriptEvent(data: KairoCommand): void {
-        void Kairo._runScriptEvent(data);
+    _scriptEvent(message) {
+        void Kairo._runScriptEvent(message);
     }
-
-    public _activateAddon(): void {
+    _activateAddon() {
         void Kairo._runActivateHooks();
     }
-
-    public _deactivateAddon(): void {
+    _deactivateAddon() {
         void Kairo._runDeactivateHooks();
     }
-
-    private static _pushSorted<T>(arr: Stored<T>[], fn: T, opt?: HandlerOptions) {
+    static _pushSorted(arr, fn, opt) {
         arr.push({ fn, priority: opt?.priority ?? 0 });
         arr.sort((a, b) => b.priority - a.priority);
     }
-
-    private static async _runActivateHooks() {
+    static async _runActivateHooks() {
         for (const { fn } of this._initHooks) {
             try {
                 await fn();
             } catch (e) {
                 system.run(() =>
+                    console.warn(
                         `[Kairo.onActivate] ${e instanceof Error ? (e.stack ?? e.message) : String(e)}`,
-                    );
+                    ),
+                );
             }
         }
-
-        this.getInstance().addonManager.setActiveState(true);
     }
-
-    private static async _runDeactivateHooks() {
+    static async _runDeactivateHooks() {
         for (const { fn } of [...this._deinitHooks].reverse()) {
             try {
                 await fn();
@@ -140,23 +100,21 @@ export class Kairo {
                 );
             }
         }
-
-        this.getInstance().addonManager.setActiveState(false);
     }
-
-    private static async _runScriptEvent(data: KairoCommand) {
+    static async _runScriptEvent(message) {
         for (const { fn } of this._seHooks) {
             try {
-                await fn(data);
+                await fn(message);
             } catch (e) {
                 system.run(() =>
                     console.warn(
-                        `[Kairo.onScriptEvent] ${
-                            e instanceof Error ? e.stack ?? e.message : String(e)
-                        }`,
+                        `[Kairo.onScriptEvent] ${e instanceof Error ? (e.stack ?? e.message) : String(e)}`,
                     ),
                 );
             }
         }
     }
 }
+Kairo._initHooks = [];
+Kairo._deinitHooks = [];
+Kairo._seHooks = [];
