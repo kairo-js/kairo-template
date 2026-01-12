@@ -21,7 +21,7 @@ Kairo.onDeactivate = () => {
      */
 };
 
-Kairo.onScriptEvent = (data: KairoCommand) => {
+Kairo.onScriptEvent = async (command: KairoCommand) => {
     /**
      * ここにはアドオンが scriptEvent を受け取った際の処理を書く
      * 利用できるプロパティは { data: KairoCommand } のみ
@@ -30,10 +30,13 @@ Kairo.onScriptEvent = (data: KairoCommand) => {
      */
 };
 
-/**
- * Kairo-DataVault を利用しない場合は、以下の処理は削除しても良い
- * If you do not use Kairo-DataVault, you may remove the following processing
- */
-Kairo.addScriptEvent(Kairo.dataVaultHandleOnScriptEvent);
+Kairo.onTick = () => {
+    /**
+     * 毎 tick 実行される処理を定義します。
+     * onActivate が呼ばれると有効化され、onDeactivate が呼ばれると無効化されます。
+     * Defines logic that is executed on every tick.
+     * It becomes active when onActivate is called and is disabled when onDeactivate is called.
+     */
+};
 
 main();
