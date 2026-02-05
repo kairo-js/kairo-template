@@ -1,8 +1,16 @@
-import { Kairo } from "./@core/kairo";
-import type { KairoCommand, KairoResponse } from "./@core/kairo/utils/KairoUtils";
+import {
+    ConsoleManager,
+    Kairo,
+    KairoUtils,
+    type KairoCommand,
+    type KairoResponse,
+} from "@kairo-ts/router";
+import { properties } from "./properties";
 
 async function main(): Promise<void> {
-    Kairo.init(); // client
+    Kairo.init(properties);
+    KairoUtils.init(properties);
+    ConsoleManager.init(properties);
 }
 
 Kairo.onActivate = () => {
