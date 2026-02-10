@@ -1,9 +1,9 @@
 import type { KairoAddonProperties } from "@kairo-ts/router";
+
 /**
  * 文末に # が記述されている箇所を適宜修正して使用します。
  * Modify and use where # is written at the end of the sentence as appropriate
  */
-
 export const properties: KairoAddonProperties = {
     id: "kairo-template", //# // a-z & 0-9 - _
     metadata: {
