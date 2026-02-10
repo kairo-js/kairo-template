@@ -5,7 +5,7 @@ import type { KairoAddonProperties } from "@kairo-ts/router";
  * Modify and use where # is written at the end of the sentence as appropriate
  */
 export const properties: KairoAddonProperties = {
-    id: "kairo-template", //# // a-z & 0-9 - _
+    id: "kairo-template", # // a-z & 0-9 - _
     metadata: {
         /** 製作者の名前 */
         authors: [
@@ -13,9 +13,9 @@ export const properties: KairoAddonProperties = {
         ],
     },
     header: {
-        name: "Kairo-template",
+        name: "Kairo-template", #
         description:
-            "A starter template for developing Minecraft Bedrock addons that rely on Kairo.",
+            "A starter template for developing Minecraft Bedrock addons that rely on Kairo.", #
         version: {
             major: 1,
             minor: 0,
@@ -28,11 +28,11 @@ export const properties: KairoAddonProperties = {
     dependencies: [
         {
             module_name: "@minecraft/server",
-            version: "2.4.0",
+            version: "2.4.0", #
         },
         {
             module_name: "@minecraft/server-ui",
-            version: "2.0.0",
+            version: "2.0.0", #
         },
     ],
     /** 前提アドオン */
