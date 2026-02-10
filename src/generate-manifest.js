@@ -118,7 +118,7 @@ function buildBPManifest(props, common, uuids) {
                 language: "javascript",
                 entry: "scripts/index.js",
                 uuid: uuids.bp.module,
-                version: [1, 0, 21],
+                version: toVersionTriple(props.header.version),
             },
         ],
         dependencies,
