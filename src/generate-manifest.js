@@ -63,13 +63,28 @@ function loadOrCreateUUIDStore(rootDir) {
     const storePath = getUUIDStorePath(rootDir);
     const existing = readJSONIfExists(storePath) ?? {};
 
+    const existingBPModules = existing.bp?.module;
+    const existingRPModules = existing.rp?.modules;
+
     const store = {
         bp: {
             header: existing.bp?.header ?? randomUUID(),
-            module: existing.bp?.module ?? randomUUID(),
+            module: {
+                data:
+                    (typeof existingBPModules === "object" && existingBPModules?.data) ??
+                    randomUUID(),
+                script:
+                    (typeof existingBPModules === "object" && existingBPModules?.script) ??
+                    (typeof existingBPModules === "string" ? existingBPModules : randomUUID()),
+            },
         },
         rp: {
             header: existing.rp?.header ?? randomUUID(),
+            modules: {
+                resources:
+                    (typeof existingRPModules === "object" && existingRPModules?.resources) ??
+                    randomUUID(),
+            },
         },
     };
 
@@ -97,11 +112,12 @@ function buildCommonManifestPart(props, kairoVersion) {
 }
 
 function buildBPManifest(props, common, uuids) {
+    const headerVersion = toVersionTriple(props.header.version);
     const dependencies = [
         ...(props.dependencies ?? []),
         {
             uuid: uuids.rp.header,
-            version: toVersionTriple(props.header.version),
+            version: headerVersion,
         },
     ];
 
@@ -114,11 +130,16 @@ function buildBPManifest(props, common, uuids) {
         },
         modules: [
             {
+                type: "data",
+                uuid: uuids.bp.module.data,
+                version: headerVersion,
+            },
+            {
                 type: "script",
                 language: "javascript",
                 entry: "scripts/index.js",
-                uuid: uuids.bp.module,
-                version: toVersionTriple(props.header.version),
+                uuid: uuids.bp.module.script,
+                version: headerVersion,
             },
         ],
         dependencies,
@@ -127,6 +148,8 @@ function buildBPManifest(props, common, uuids) {
 }
 
 function buildRPManifest(props, common, uuids) {
+    const headerVersion = toVersionTriple(props.header.version);
+
     return {
         format_version: 2,
         ...common,
@@ -134,10 +157,17 @@ function buildRPManifest(props, common, uuids) {
             ...common.header,
             uuid: uuids.rp.header,
         },
+        modules: [
+            {
+                type: "resources",
+                uuid: uuids.rp.modules.resources,
+                version: headerVersion,
+            },
+        ],
         dependencies: [
             {
                 uuid: uuids.bp.header,
-                version: toVersionTriple(props.header.version),
+                version: headerVersion,
             },
         ],
     };
