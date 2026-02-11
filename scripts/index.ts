@@ -4,7 +4,7 @@ import {
     KairoUtils,
     type KairoCommand,
     type KairoResponse,
-} from "@kairo-ts/router";
+} from "@kairo-js/router";
 import { properties } from "./properties";
 
 async function main(): Promise<void> {

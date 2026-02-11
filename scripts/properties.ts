@@ -1,4 +1,4 @@
-import type { KairoAddonProperties } from "@kairo-ts/router";
+import type { KairoAddonProperties } from "@kairo-js/router";
 
 /**
  * 文末に # が記述されている箇所を適宜修正して使用します。
@@ -28,7 +28,7 @@ export const properties: KairoAddonProperties = {
     dependencies: [
         {
             module_name: "@minecraft/server",
-            version: "2.4.0", #
+            version: "2.5.0", #
         },
         {
             module_name: "@minecraft/server-ui",
