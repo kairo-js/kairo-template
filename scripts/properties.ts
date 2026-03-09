@@ -1,11 +1,11 @@
 import { MinecraftModule } from "@kairo-js/router";
-import type { KairoAddonProperties } from "@kairo-js/router";
+import type { AddonProperties } from "@kairo-js/router";
 
 /**
  * 文末に # が記述されている箇所を適宜修正して使用します。
  * Modify and use where # is written at the end of the sentence as appropriate
  */
-export const properties: KairoAddonProperties = {
+export const properties: AddonProperties = {
     id: "kairo-template", # // a-z & 0-9 - _
     metadata: {
         /** 製作者の名前 */
