@@ -1,3 +1,4 @@
+import { MinecraftModule } from "@kairo-js/router";
 import type { KairoAddonProperties } from "@kairo-js/router";
 
 /**
@@ -23,15 +24,19 @@ export const properties: KairoAddonProperties = {
             // prerelease: "preview.1",
             // build: "abc123",
         },
-        min_engine_version: [1, 21, 132],
+        min_engine_version: {
+            major: 1,
+            minor: 21,
+            patch: 132,
+        },
     },
     dependencies: [
         {
-            module_name: "@minecraft/server",
+            module_name: MinecraftModule.Server,
             version: "2.5.0", #
         },
         {
-            module_name: "@minecraft/server-ui",
+            module_name: MinecraftModule.ServerUi,
             version: "2.0.0", #
         },
     ],
