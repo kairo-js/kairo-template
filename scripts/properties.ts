@@ -13,7 +13,7 @@ export const properties: AddonProperties = {
         ],
     },
     header: {
-        name: "Kairo-template", #
+        name: "Kairo Template", #
         description:
             "A starter template for developing Minecraft Bedrock addons that rely on Kairo.", #
         version: {
