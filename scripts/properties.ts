@@ -1,5 +1,4 @@
-import { MinecraftModule } from "@kairo-js/router";
-import type { AddonProperties } from "@kairo-js/router";
+import { MinecraftModule, type AddonProperties } from "@kairo-js/router";
 
 /**
  * 文末に # が記述されている箇所を適宜修正して使用します。
