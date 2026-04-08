@@ -28,7 +28,7 @@ function resolveMinecraftDevPath(addonName, type) {
 }
 
 function setHiddenAttributeWindows(targetPath) {
-    const result = spawnSync("attrib", ["+h", targetPath], { stdio: "pipe" });
+    const result = spawnSync("attrib", ["+h", targetPath, "/l"], { stdio: "pipe" });
     if (result.status !== 0) {
         const stderr = result.stderr?.toString().trim();
         const stdout = result.stdout?.toString().trim();
