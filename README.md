@@ -17,7 +17,7 @@ When this command is executed, `esbuild` is used for bundling and the following 
 - manifest.json is automatically generated in BP/ and RP/ from the information in properties
 - TypeScript files in src/ are built as JavaScript into BP/scripts
 - The pack_icon.png at the project root is copied into both BP/ and RP/
-- The completed BP/ and RP/ are copied into Minecraft’s development folder
+- On Windows, a junction is created from Minecraft’s development folder to this project's BP/ and RP/ (instead of copying)
 
 ## Requirements
 
